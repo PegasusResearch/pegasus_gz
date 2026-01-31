@@ -12,6 +12,8 @@ def generate_launch_description():
 
 
     pkg_pegasus_gz = get_package_share_directory('pegasus_gz')
+    pegasus_gz_worlds = os.path.join(pkg_pegasus_gz, 'worlds')
+    pegasus_gz_models = os.path.join(pkg_pegasus_gz, 'models')
 
     # Setup the gazebo path to include PX4 models and worlds
     px4_dir = os.path.expanduser('~/Developer/PX4-Autopilot')
@@ -25,7 +27,7 @@ def generate_launch_description():
     gz_sim_system_plugin_path = os.environ.get('GZ_SIM_SYSTEM_PLUGIN_PATH', '')
     gz_sim_server_config_path = os.environ.get('GZ_SIM_SERVER_CONFIG_PATH', '')
                             
-    gz_sim_resource_path = f"{gz_sim_resource_path}:{px4_gz_models}:{px4_gz_worlds}"
+    gz_sim_resource_path = f"{gz_sim_resource_path}:{px4_gz_models}:{px4_gz_worlds}:{pegasus_gz_models}:{pegasus_gz_worlds}"
     gz_sim_system_plugin_path = f"{gz_sim_system_plugin_path}:{px4_gz_plugins}"
     gz_sim_server_config_path = px4_gz_server_config
 
@@ -43,7 +45,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([
             os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
         ]),
-        launch_arguments={'gz_args': f"-r {pkg_pegasus_gz}/worlds/lawn.sdf"}.items(),
+        launch_arguments={'gz_args': f"-r {pkg_pegasus_gz}/worlds/taguspark_arena/taguspark_arena.sdf"}.items(),
     )
 
     # GZ_SIM_RESOURCE_PATH=/home/marcelo/.simulation-gazebo/models GZ_SIM_SERVER_CONFIG_PATH=/home/marcelo/.simulation-gazebo/server.config gz sim -r /home/marcelo/.simulation-gazebo/worlds/default.sdf
