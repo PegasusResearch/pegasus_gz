@@ -76,6 +76,7 @@ def generate_launch_description():
     environment["PX4_GZ_STANDALONE"] = '1'
     environment["PX4_GZ_MODEL_NAME"] = 'x500'
     environment["PX4_SYS_AUTOSTART"] = '4001'  # x500
+    environment["PX4_GZ_WORLD"] = 'racetrack'
 
     px4_sitl = ExecuteProcess(
         cmd=[
@@ -98,8 +99,8 @@ def generate_launch_description():
         package='ros_gz_sim',
         executable='create',
         arguments=[
-            '-file', os.path.join(pkg_pegasus_gz, 'models', 'pegasus', 'pegasus.sdf'),
-            '-name', 'pegasus',
+            '-file', os.path.join(pkg_pegasus_gz, 'models', 'x500', 'model.sdf'),
+            '-name', 'x500',
             '-x', '0', '-y', '0', '-z', '0.5'
         ],
         output='screen'
@@ -110,7 +111,7 @@ def generate_launch_description():
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=[
-            '/world/default/model/pegasus/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model',
+            '/world/default/model/x500/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model',
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'
         ],
         output='screen'
@@ -121,7 +122,7 @@ def generate_launch_description():
         set_gz_sim_system_plugin,
         set_gz_sim_server_config,
         gz_sim,
-        #px4_sitl,
+        px4_sitl,
         spawn_entity,
         bridge
     ])
