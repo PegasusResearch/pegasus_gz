@@ -45,7 +45,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([
             os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
         ]),
-        launch_arguments={'gz_args': f"-r {pkg_pegasus_gz}/worlds/taguspark_arena/taguspark_arena.sdf"}.items(),
+        launch_arguments={'gz_args': f"-r {pkg_pegasus_gz}/worlds/racetrack/racetrack.sdf"}.items(),
     )
 
     # GZ_SIM_RESOURCE_PATH=/home/marcelo/.simulation-gazebo/models GZ_SIM_SERVER_CONFIG_PATH=/home/marcelo/.simulation-gazebo/server.config gz sim -r /home/marcelo/.simulation-gazebo/worlds/default.sdf

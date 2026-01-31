@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sdf version="1.9">
-  <world name="forest">
+  <world name="taguspark_arena">
 
     <!-- Physics properties -->
     <physics type="ode">
@@ -21,7 +21,7 @@
     <!-- Taguspark arena cage -->
     <model name="taguspark_mesh">
       <static>true</static>
-      <link name="link">
+      <link name="taguspark_link">
         <!-- <collision name="collision">
           <geometry>
             <mesh>
@@ -29,7 +29,7 @@
             </mesh>
           </geometry>
         </collision> -->
-        <visual name="visual">
+        <visual name="taguspark_visual">
           <geometry>
             <mesh>
               <uri>model://taguspark_arena/meshes/Taguspark.dae</uri>
