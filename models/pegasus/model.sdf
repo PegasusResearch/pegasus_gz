@@ -180,9 +180,9 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <ambient>0 1 1 1</ambient>
-                    <diffuse>0 1 1 1</diffuse>
-                    <specular>0 0 0 1</specular>
+                    <ambient>0.175 0.175 0.175 1</ambient>
+                    <diffuse>0.175 0.175 0.175 1</diffuse>
+                    <specular>0.1 0.1 0.1 1</specular>
                 </material>
             </visual>
             <gravity>1</gravity>
@@ -228,9 +228,9 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <ambient>0 1 1 1</ambient>
-                    <diffuse>0 1 1 1</diffuse>
-                    <specular>0 0 0 1</specular>
+                    <ambient>0.175 0.175 0.175 1</ambient>
+                    <diffuse>0.175 0.175 0.175 1</diffuse>
+                    <specular>0.1 0.1 0.1 1</specular>
                 </material>
             </visual>
             <gravity>1</gravity>
@@ -276,9 +276,9 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <ambient>0 1 1 1</ambient>
-                    <diffuse>0 1 1 1</diffuse>
-                    <specular>0 0 0 1</specular>
+                    <ambient>0.175 0.175 0.175 1</ambient>
+                    <diffuse>0.175 0.175 0.175 1</diffuse>
+                    <specular>0.1 0.1 0.1 1</specular>
                 </material>
             </visual>
             <gravity>1</gravity>
@@ -324,9 +324,9 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <ambient>0 1 1 1</ambient>
-                    <diffuse>0 1 1 1</diffuse>
-                    <specular>0 0 0 1</specular>
+                    <ambient>0.175 0.175 0.175 1</ambient>
+                    <diffuse>0.175 0.175 0.175 1</diffuse>
+                    <specular>0.1 0.1 0.1 1</specular>
                 </material>
             </visual>
             <gravity>1</gravity>
