@@ -12,6 +12,10 @@ def launch_vehicle(context, *args, **kwargs):
     vehicle_id = int(LaunchConfiguration('vehicle_id').perform(context))
     port_increment = vehicle_id - 1
 
+    # Define the vehicle spawn name
+    vehicle_model = 'x500'
+    vehicle_spawn_name = vehicle_model + '_' + str(vehicle_id)
+
     # Get the PX4 directory from the environment
     PX4_DIR = os.environ['PX4_DIR']
     PX4_RUN_DIR = os.environ['PX4_RUN_DIR']
@@ -23,7 +27,7 @@ def launch_vehicle(context, *args, **kwargs):
             PX4_DIR + '/ROMFS/px4fmu_common/',
             '-s',
             PX4_DIR + '/ROMFS/px4fmu_common/init.d-posix/rcS',
-            '-i ' + '0'
+            '-i ' + str(port_increment)
         ],
         prefix='bash -c "$0 $@"',
         cwd=PX4_RUN_DIR,
@@ -31,7 +35,7 @@ def launch_vehicle(context, *args, **kwargs):
         env={
             'ROS_VERSION': '2',
             'PX4_GZ_STANDALONE': '1',
-            'PX4_GZ_MODEL_NAME': 'x500',
+            'PX4_GZ_MODEL_NAME': vehicle_spawn_name,
             'PX4_SYS_AUTOSTART': '4001',
             'PX4_GZ_WORLD': 'simulation_world',
             'PATH': os.environ.get('PATH', ''),
@@ -45,8 +49,8 @@ def launch_vehicle(context, *args, **kwargs):
         package='ros_gz_sim',
         executable='create',
         arguments=[
-            '-file', os.path.join(get_package_share_directory('pegasus_gz'), 'models', 'x500', 'model.sdf'),
-            '-name', 'x500',
+            '-file', os.path.join(get_package_share_directory('pegasus_gz'), 'models', vehicle_model, 'model.sdf'),
+            '-name', vehicle_spawn_name,
             '-x', LaunchConfiguration('x').perform(context),
             '-y', LaunchConfiguration('y').perform(context), 
             '-z', LaunchConfiguration('z').perform(context),
