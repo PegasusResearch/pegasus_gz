@@ -106,6 +106,7 @@ def generate_launch_description():
         SetEnvironmentVariable('PX4_RUN_DIR', PX4_RUN_DIR),
 
         # Get the vehicle id and initial position/orientation (ENU frame)
+        DeclareLaunchArgument('vehicle', default_value='x500', description='Vehicle model to spawn'),
         DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network'),
         DeclareLaunchArgument('x', default_value='0.0', description='X position expressed in ENU'),
         DeclareLaunchArgument('y', default_value='0.0', description='Y position expressed in ENU'),
