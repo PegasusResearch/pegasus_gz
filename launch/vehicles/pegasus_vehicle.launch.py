@@ -6,6 +6,7 @@
 | Description: Base launch file to spawn the pegasus vehicle model in Gazebo, along with its corresponding PX4 SITL instance.
 """
 import os
+from launch_ros.actions import Node
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
@@ -39,5 +40,34 @@ def generate_launch_description():
                 'P': LaunchConfiguration('P'),
                 'Y': LaunchConfiguration('Y')
             }.items()
+        ),
+
+        # Launch the bridge and get the realsense topics bridged from gazebo to ROS2
+        Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            arguments=[
+                # Format: /gazebo_topic@ros_msg_type@gazebo_msg_type
+                
+                # 1. Camera Info
+                '/world/simulation_world/model/pegasus_1/link/base_link/sensor/realsense_d435i/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
+                
+                # 2. RGB Image
+                '/world/simulation_world/model/pegasus_1/link/base_link/sensor/realsense_d435i/image@sensor_msgs/msg/Image[gz.msgs.Image',
+                
+                # 3. Depth Image
+                '/world/simulation_world/model/pegasus_1/link/base_link/sensor/realsense_d435i/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
+                
+                # 4. Point Cloud
+                 '/world/simulation_world/model/pegasus_1/link/base_link/sensor/realsense_d435i/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked'
+            ],
+            # This is where you specify the output topics
+            remappings=[
+                (f'/world/simulation_world/model/pegasus_1/link/base_link/sensor/realsense_d435i/camera_info', '/camera/camera_info'),
+                (f'/world/simulation_world/model/pegasus_1/link/base_link/sensor/realsense_d435i/image',       '/camera/image_raw'),
+                (f'/world/simulation_world/model/pegasus_1/link/base_link/sensor/realsense_d435i/depth_image', '/camera/depth/image_raw'),
+                (f'/world/simulation_world/model/pegasus_1/link/base_link/sensor/realsense_d435i/points',      '/camera/points'),
+            ],
+            output='screen'
         )
     ])
