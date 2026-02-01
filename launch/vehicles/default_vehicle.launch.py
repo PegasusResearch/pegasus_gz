@@ -47,7 +47,12 @@ def launch_vehicle(context, *args, **kwargs):
         arguments=[
             '-file', os.path.join(get_package_share_directory('pegasus_gz'), 'models', 'x500', 'model.sdf'),
             '-name', 'x500',
-            '-x', '0', '-y', '0', '-z', '0.5'
+            '-x', LaunchConfiguration('x').perform(context),
+            '-y', LaunchConfiguration('y').perform(context), 
+            '-z', LaunchConfiguration('z').perform(context),
+            '-R', LaunchConfiguration('R').perform(context),
+            '-P', LaunchConfiguration('P').perform(context),
+            '-Y', LaunchConfiguration('Y').perform(context),
         ],
         output='screen'
     )
