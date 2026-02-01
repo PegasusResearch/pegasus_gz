@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 import os
+from pathlib import Path
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch.actions import ExecuteProcess, IncludeLaunchDescription, DeclareLaunchArgument, SetEnvironmentVariable, OpaqueFunction
@@ -6,20 +8,45 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
+def create_symlink(source_path, link_path):
+
+    source = Path(source_path).resolve()
+    link = Path(link_path)
+
+    # 1. Delete if it exists (handles files, symlinks, and broken symlinks)
+    if link.exists() or link.is_symlink():
+        link.unlink()
+        
+    # 2. Ensure the parent directory exists
+    link.parent.mkdir(parents=True, exist_ok=True)
+
+    # 3. Create the new link
+    link.symlink_to(source)
+    print(f"Created symlink: {link} -> {source}")
+
 def launch_vehicle(context, *args, **kwargs):
 
     # Get the id of the drone to be launched
     vehicle_id = int(LaunchConfiguration('vehicle_id').perform(context))
     port_increment = vehicle_id - 1
 
-    # Define the vehicle spawn name
-    vehicle_model = 'x500'
+    # Define the vehicle model and spawn name
+    vehicle_model = LaunchConfiguration('vehicle').perform(context)
     vehicle_spawn_name = vehicle_model + '_' + str(vehicle_id)
 
     # Get the PX4 directory from the environment
     PX4_DIR = os.environ['PX4_DIR']
     PX4_RUN_DIR = os.environ['PX4_RUN_DIR']
-   
+    px4_config_file = LaunchConfiguration('px4_config_file').perform(context)
+
+    # Check if the specified config file exists in the configs folders
+    px4_config_file_path = os.path.join(get_package_share_directory('pegasus_gz'), 'config', 'px4', 'init.d-posix', 'airframes', px4_config_file)
+    if not os.path.isfile(px4_config_file_path):
+        raise FileNotFoundError(f"PX4 configuration file '{px4_config_file_path}' does not exist. Please provide a valid config file.")
+    
+    # Create a symbolic link to the specified config file in the PX4 airframes folder
+    create_symlink(source_path=px4_config_file_path, link_path=os.path.join(PX4_DIR, 'ROMFS', 'px4fmu_common', 'init.d-posix', 'airframes', px4_config_file))
+
     # 1. Launch PX4 SITL
     px4_sitl = ExecuteProcess(
         cmd=[
@@ -36,7 +63,7 @@ def launch_vehicle(context, *args, **kwargs):
             'ROS_VERSION': '2',
             'PX4_GZ_STANDALONE': '1',
             'PX4_GZ_MODEL_NAME': vehicle_spawn_name,
-            'PX4_SYS_AUTOSTART': '4001',
+            'PX4_SYS_AUTOSTART': px4_config_file.split('_')[0],
             'PX4_GZ_WORLD': 'simulation_world',
             'PATH': os.environ.get('PATH', ''),
             'GZ_CONFIG_PATH': os.environ.get('GZ_CONFIG_PATH', ''),
@@ -107,6 +134,7 @@ def generate_launch_description():
 
         # Get the vehicle id and initial position/orientation (ENU frame)
         DeclareLaunchArgument('vehicle', default_value='x500', description='Vehicle model to spawn'),
+        DeclareLaunchArgument('px4_config_file', default_value='4500_pg_x500', description='PX4 configuration file to use'),
         DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network'),
         DeclareLaunchArgument('x', default_value='0.0', description='X position expressed in ENU'),
         DeclareLaunchArgument('y', default_value='0.0', description='Y position expressed in ENU'),
