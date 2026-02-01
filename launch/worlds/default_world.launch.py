@@ -9,22 +9,13 @@ from ament_index_python.packages import get_package_share_directory
 
 def launch_world(context, *args, **kwargs):
 
-    print("Launching world:", LaunchConfiguration('world').perform(context))
-
-    # gz_sim = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([
-    #         os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
-    #     ]),
-    #     launch_arguments={'gz_args': f"-r {pkg_pegasus_gz}/worlds/racetrack/model.sdf"}.items(),
-    # )
-
-    # Launch Gazebo World
+    # Launch Gazebo World — pass the model path as a positional gz arg
     return [
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
             ]),
-            launch_arguments={'gz_args': f"-v -r {get_package_share_directory('pegasus_gz')}/worlds/{LaunchConfiguration('world').perform(context)}/model.sdf"}.items(),
+            launch_arguments={'gz_args': f"-r {get_package_share_directory('pegasus_gz')}/worlds/{LaunchConfiguration('world').perform(context)}/model.sdf"}.items(),
         )
     ]
 
@@ -50,16 +41,18 @@ def generate_launch_description():
     # Setup GZ_SIM environment variables
     gz_sim_resource_path = os.environ.get('GZ_SIM_RESOURCE_PATH', '')
     gz_sim_system_plugin_path = os.environ.get('GZ_SIM_SYSTEM_PLUGIN_PATH', '')
-    gz_sim_server_config_path = os.environ.get('GZ_SIM_SERVER_CONFIG_PATH', '')
 
     return LaunchDescription([
         # Environment variables
         SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', f"{gz_sim_resource_path}:{px4_gz_models}:{px4_gz_worlds}:{pegasus_gz_models}:{pegasus_gz_worlds}"),
         SetEnvironmentVariable('GZ_SIM_SYSTEM_PLUGIN_PATH', f"{gz_sim_system_plugin_path}:{px4_gz_plugins}"),
-        SetEnvironmentVariable('GZ_SIM_SERVER_CONFIG_PATH', f"{gz_sim_server_config_path}:{px4_gz_server_config}"),
+        SetEnvironmentVariable('GZ_SIM_SERVER_CONFIG_PATH', px4_gz_server_config),
+        SetEnvironmentVariable('GZ_TRANSPORT_LOCALHOST_ONLY','1'),
+        SetEnvironmentVariable('IGN_TRANSPORT_DISABLE_MULTICAST', '1'),
+        SetEnvironmentVariable('GZ_IP', '127.0.0.1'),
         
         # Get the specified world from the pegasus_gz worlds folder 
-        DeclareLaunchArgument('world', default_value='racetrack', description='The name of the world to launch inside the pegasus_gz worlds folder.'),
+        DeclareLaunchArgument('world', default_value='default', description='The name of the world to launch inside the pegasus_gz worlds folder.'),
 
         # Launch the actual gazebo with the world
         OpaqueFunction(function=launch_world)

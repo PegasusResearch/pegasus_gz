@@ -122,7 +122,7 @@ def generate_launch_description():
         set_gz_sim_system_plugin,
         set_gz_sim_server_config,
         gz_sim,
-        px4_sitl,
-        spawn_entity,
-        bridge
+        #px4_sitl,
+        #spawn_entity,
+        #bridge
     ])
