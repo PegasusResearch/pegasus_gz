@@ -1,14 +1,26 @@
 #!/usr/bin/env python3
+"""
+| File: default_vehicle.launch.py
+| Author: Marcelo Jacinto (marcelo.jacinto@tecnico.ulisboa.pt)
+| License: Non-Commercial & Non-Military BSD4 License. Copyright (c) 2026, Marcelo Jacinto. All rights reserved.
+| Description: Base launch file to spawn a vehicle model in Gazebo, along with its corresponding PX4 SITL instance.
+"""
 import os
 from pathlib import Path
+from launch_ros.actions import Node
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
-from launch.actions import ExecuteProcess, IncludeLaunchDescription, DeclareLaunchArgument, SetEnvironmentVariable, OpaqueFunction
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch_ros.actions import Node
+from launch.actions import ExecuteProcess, DeclareLaunchArgument, SetEnvironmentVariable, OpaqueFunction
 from ament_index_python.packages import get_package_share_directory
 
 def create_symlink(source_path, link_path):
+    """
+    Auxiliary function used to create a symlink of configurations files inside the PX4-Autopilot directory
+
+    Args:
+        source_path (str): The path to the file containing the configuration to be linked
+        link_path (str): The path where the symlink will be created
+    """
 
     source = Path(source_path).resolve()
     link = Path(link_path)
@@ -23,6 +35,7 @@ def create_symlink(source_path, link_path):
     # 3. Create the new link
     link.symlink_to(source)
     print(f"Created symlink: {link} -> {source}")
+
 
 def launch_vehicle(context, *args, **kwargs):
 
@@ -92,6 +105,7 @@ def launch_vehicle(context, *args, **kwargs):
         px4_sitl,
         spawn_entity,
     ]
+
 
 def generate_launch_description():
 
