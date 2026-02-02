@@ -21,7 +21,7 @@ def generate_launch_description():
         DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network'),
         DeclareLaunchArgument('x', default_value='0.0', description='X position expressed in ENU'),
         DeclareLaunchArgument('y', default_value='0.0', description='Y position expressed in ENU'),
-        DeclareLaunchArgument('z', default_value='0.0', description='Z position expressed in ENU'),
+        DeclareLaunchArgument('z', default_value='0.5', description='Z position expressed in ENU'),
         DeclareLaunchArgument('R', default_value='0.0', description='Roll orientation expressed in ENU'),
         DeclareLaunchArgument('P', default_value='0.0', description='Pitch orientation expressed in ENU'),
         DeclareLaunchArgument('Y', default_value='0.0', description='Yaw orientation expressed in ENU'),
