@@ -53,18 +53,19 @@ def launch_vehicle(context, *args, **kwargs):
                 # 3. Depth Image
                 f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/realsense_d435i/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
                 # 4. Point Cloud
-                f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/realsense_d435i/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked'
+                f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/realsense_d435i/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked]',
                 # 5. Downward facing Camera info
                 f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/downward_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
                 # 6. Downward facing RGB Image
                 f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/downward_camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
+                
             ],
             # This is where you specify the output topics
             remappings=[
                 (f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/realsense_d435i/camera_info', f'/{ros2_namespace}/camera/camera_info'),
                 (f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/realsense_d435i/image',       f'/{ros2_namespace}/camera/image_raw'),
                 (f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/realsense_d435i/depth_image', f'/{ros2_namespace}/camera/depth/image_raw'),
-                (f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/realsense_d435i/points',      f'/{ros2_namespace}/camera/pointcloud'),
+                #(f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/realsense_d435i/points',      f'/{ros2_namespace}/camera/pointcloud'),
                 (f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/downward_camera/camera_info', f'/{ros2_namespace}/downward_camera/camera_info'),
                 (f'/world/simulation_world/model/{gazebo_namespace}/link/base_link/sensor/downward_camera/image',       f'/{ros2_namespace}/downward_camera/image_raw'),
             ],
