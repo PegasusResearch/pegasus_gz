@@ -3,7 +3,7 @@
     <model name='pegasus'>
         <pose>0 0 0 0 0 0</pose>
         <self_collide>false</self_collide>
-        <static>true</static>
+        <static>false</static>
 
         <!-- Base Link definition -->
         <link name="base_link">
@@ -18,7 +18,7 @@
                     <izz>0.055225</izz>
                 </inertia>
             </inertial>
-            <gravity>false</gravity>
+            <gravity>true</gravity>
             <velocity_decay />
 
             <!-- Visual and Collision -->
@@ -202,13 +202,53 @@
                     </noise>
                 </camera>
             </sensor>
+
+            <!-- Monocular downward-facing camera sensor -->
+            <sensor name="downward_camera" type="camera">
+                <pose>0.10 0 0 0 1.5707963268 0</pose>
+                <update_rate>60</update_rate>
+                <camera name="camera">
+                    <horizontal_fov>1.0472</horizontal_fov>
+                    <lens>
+                        <intrinsics>
+                            <fx>554.25469</fx>
+                            <fy>554.25469</fy>
+                            <cx>320.5</cx>
+                            <cy>240.5</cy>
+                            <s>0</s>
+                        </intrinsics>
+                    </lens>
+                    <distortion>
+                        <k1>0.0</k1>
+                        <k2>0.0</k2>
+                        <k3>0.0</k3>
+                        <p1>0.0</p1>
+                        <p2>0.0</p2>
+                        <center>0.5 0.5</center>
+                    </distortion>
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.01</near>
+                        <far>300</far>
+                    </clip>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0</mean>
+                        <stddev>0.007</stddev>
+                    </noise>
+                </camera>
+            </sensor>
         </link>
 
 
         <!-- ROTORS -->
         <!-- ROTOR 0 -->
         <link name='rotor_0'>
-            <pose>0.113 -0.074 0.037 0 0 0</pose>
+            <pose>0.074 -0.113 0.037 0 0 0</pose>
             <inertial>
                 <pose>0 0 0 0 0 0</pose>
                 <mass>0.005</mass>
@@ -256,7 +296,7 @@
 
         <!-- ROTOR 1 -->
         <link name='rotor_1'>
-            <pose>-0.113 0.074 0.037 0 0 0</pose>
+            <pose>-0.074 0.113 0.037 0 0 0</pose>
             <inertial>
                 <pose>0 0 0 0 0 0</pose>
                 <mass>0.005</mass>
@@ -304,7 +344,7 @@
 
         <!-- ROTOR 2 -->
         <link name='rotor_2'>
-            <pose>0.113 0.074 0.037 0 0 0</pose>
+            <pose>0.074 0.113 0.037 0 0 0</pose>
             <inertial>
                 <pose>0 0 0 0 0 0</pose>
                 <mass>0.005</mass>
@@ -352,7 +392,7 @@
 
         <!-- ROTOR 3 -->
         <link name='rotor_3'>
-            <pose>-0.113 -0.074 0.037 0 0 0</pose>
+            <pose>-0.074 -0.113 0.037 0 0 0</pose>
             <inertial>
                 <pose>0 0 0 0 0 0</pose>
                 <mass>0.005</mass>
