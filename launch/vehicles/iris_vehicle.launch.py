@@ -6,6 +6,8 @@
 | Description: Base launch file to spawn the iris vehicle model in Gazebo, along with its corresponding PX4 SITL instance.
 """
 import os
+
+from matplotlib import image
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
@@ -21,7 +23,7 @@ def generate_launch_description():
         DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network'),
         DeclareLaunchArgument('x', default_value='0.0', description='X position expressed in ENU'),
         DeclareLaunchArgument('y', default_value='0.0', description='Y position expressed in ENU'),
-        DeclareLaunchArgument('z', default_value='0.0', description='Z position expressed in ENU'),
+        DeclareLaunchArgument('z', default_value='0.2', description='Z position expressed in ENU'),
         DeclareLaunchArgument('R', default_value='0.0', description='Roll orientation expressed in ENU'),
         DeclareLaunchArgument('P', default_value='0.0', description='Pitch orientation expressed in ENU'),
         DeclareLaunchArgument('Y', default_value='0.0', description='Yaw orientation expressed in ENU'),
@@ -39,5 +41,8 @@ def generate_launch_description():
                 'P': LaunchConfiguration('P'),
                 'Y': LaunchConfiguration('Y')
             }.items()
+
+            # /world/simulation_world/model/iris_1/link/base_link/sensor/front_camera/camera_info
+            # /world/simulation_world/model/iris_1/link/base_link/sensor/front_camera/image
         )
     ])
