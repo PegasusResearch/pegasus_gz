@@ -174,7 +174,7 @@ def generate_launch_description():
         DeclareLaunchArgument('px4_config_file', default_value='4500_pg_x500', description='PX4 configuration file to use'),
         DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network'),
         DeclareLaunchArgument('vehicle_ns', default_value='drone', description='Namespace to append to every topic and node name in ROS2'),
-        DeclareLaunchArgument('pegasus_gnc_launchfile', default_value='iris', description='Whether to launch the Pegasus GNC stack alongside the vehicle'),
+        DeclareLaunchArgument('pegasus_gnc_launchfile', default_value='none', description='Whether to launch the Pegasus GNC stack alongside the vehicle'),
         DeclareLaunchArgument('x', default_value='0.0', description='X position expressed in ENU'),
         DeclareLaunchArgument('y', default_value='0.0', description='Y position expressed in ENU'),
         DeclareLaunchArgument('z', default_value='0.0', description='Z position expressed in ENU'),
