@@ -32,7 +32,7 @@
         <visual name="taguspark_visual">
           <geometry>
             <mesh>
-              <uri>model://taguspark_arena/meshes/Taguspark.dae</uri>
+              <uri>model://taguspark/meshes/Taguspark.dae</uri>
             </mesh>
           </geometry>
         </visual>
