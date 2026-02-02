@@ -23,14 +23,16 @@ def launch_vehicle(context, *args, **kwargs):
     gazebo_namespace = f'{vehicle_name}_{vehicle_id}'
 
     # The namespace under which the ROS2 topics will be available
-    ros2_namespace = f'drone_{vehicle_id}'
+    ros2_namespace = f'{LaunchConfiguration("vehicle_ns").perform(context)}{vehicle_id}'
 
     # Launch the vehicle using the default vehicle launch file (which does all the heavy lifting)
     vehicle_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('pegasus_gz'), 'launch/vehicles/default_vehicle.launch.py')),
             launch_arguments={
                 'vehicle': vehicle_name,
                 'px4_config_file': vehicle_px4_config,
-                'id': vehicle_id,
+                'vehicle_id': vehicle_id,
+                'vehicle_ns': LaunchConfiguration('vehicle_ns').perform(context),
+                'pegasus_gnc_launchfile': LaunchConfiguration('pegasus_gnc_launchfile').perform(context),
                 'x': LaunchConfiguration('x').perform(context),
                 'y': LaunchConfiguration('y').perform(context),
                 'z': LaunchConfiguration('z').perform(context),
@@ -43,6 +45,9 @@ def launch_vehicle(context, *args, **kwargs):
     ros2_bridge_node = Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
+            namespace=[
+                LaunchConfiguration('vehicle_ns'), 
+                LaunchConfiguration('vehicle_id')],
             arguments=[
                 # Format: /gazebo_topic@ros_msg_type@gazebo_msg_type
                 # 1. Camera Info
@@ -69,13 +74,14 @@ def generate_launch_description():
         
         # Launch arguments
         DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network'),
+        DeclareLaunchArgument('vehicle_ns', default_value='drone', description='Namespace to append to every topic and node name in ROS2'),
+        DeclareLaunchArgument('pegasus_gnc_launchfile', default_value='simulation/iris.launch.py', description='Whether to launch the Pegasus GNC stack alongside the vehicle'),
         DeclareLaunchArgument('x', default_value='0.0', description='X position expressed in ENU'),
         DeclareLaunchArgument('y', default_value='0.0', description='Y position expressed in ENU'),
         DeclareLaunchArgument('z', default_value='0.2', description='Z position expressed in ENU'),
         DeclareLaunchArgument('R', default_value='0.0', description='Roll orientation expressed in ENU'),
         DeclareLaunchArgument('P', default_value='0.0', description='Pitch orientation expressed in ENU'),
         DeclareLaunchArgument('Y', default_value='0.0', description='Yaw orientation expressed in ENU'),
-        
 
         # Launch the actual vehicle inside gazebo, along with the corresponding PX4 SITL instance
         OpaqueFunction(function=launch_vehicle)
