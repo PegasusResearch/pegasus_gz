@@ -105,13 +105,13 @@ def launch_vehicle(context, *args, **kwargs):
     # Check if we need to launch the Pegasus GNC stack
     pegasus_gnc_launchfile = LaunchConfiguration('pegasus_gnc_launchfile').perform(context)
 
-    # Check if the specified launch file exists
+    # # Check if the specified launch file exists
     if pegasus_gnc_launchfile != 'none':
         pegasus_launchfile_path = os.path.join(get_package_share_directory('pegasus'), 'launch', pegasus_gnc_launchfile)
         if not os.path.isfile(pegasus_launchfile_path):
             raise FileNotFoundError(f"Pegasus GNC launch file '{pegasus_launchfile_path}' does not exist. Please provide a valid launch file or specify pegasus_gnc_launchfile:=none.")
 
-    # 3. Spawn the Pegasus GNC stack (if applicable)
+    # # 3. Spawn the Pegasus GNC stack (if applicable)
     pegasus_launch = IncludeLaunchDescription(
         # Grab the launch file for the mavlink interface
         PythonLaunchDescriptionSource(pegasus_launchfile_path),

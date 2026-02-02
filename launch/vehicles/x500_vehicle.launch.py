@@ -20,7 +20,7 @@ def generate_launch_description():
         # Launch arguments
         DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network'),
         DeclareLaunchArgument('vehicle_ns', default_value='drone', description='Namespace to append to every topic and node name in ROS2'),
-        DeclareLaunchArgument('pegasus_gnc_launchfile', default_value='none', description='Whether to launch the Pegasus GNC stack alongside the vehicle'),
+        DeclareLaunchArgument('pegasus_gnc_launchfile', default_value='simulation/x500_sim.launch.py', description='Whether to launch the Pegasus GNC stack alongside the vehicle'),
         
         DeclareLaunchArgument('x', default_value='0.0', description='X position expressed in ENU'),
         DeclareLaunchArgument('y', default_value='0.0', description='Y position expressed in ENU'),
