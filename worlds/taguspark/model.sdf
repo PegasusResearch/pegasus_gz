@@ -22,13 +22,13 @@
     <model name="taguspark_mesh">
       <static>true</static>
       <link name="taguspark_link">
-        <!-- <collision name="collision">
+        <collision name="collision">
           <geometry>
             <mesh>
-              <uri>model://taguspark_arena/meshes/Taguspark.dae</uri>
+              <uri>model://taguspark/meshes/Taguspark.stl</uri>
             </mesh>
           </geometry>
-        </collision> -->
+        </collision>
         <visual name="taguspark_visual">
           <geometry>
             <mesh>
