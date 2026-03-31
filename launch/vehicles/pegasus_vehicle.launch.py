@@ -24,14 +24,16 @@ def launch_vehicle(context, *args, **kwargs):
     gazebo_namespace = f'{vehicle_name}_{vehicle_id}'
 
     # The namespace under which the ROS2 topics will be available
-    ros2_namespace = f'drone_{vehicle_id}'
+    ros2_namespace = f'{LaunchConfiguration("vehicle_ns").perform(context)}{vehicle_id}'
 
     # Launch the vehicle using the default vehicle launch file (which does all the heavy lifting)
     vehicle_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('pegasus_gz'), 'launch/vehicles/default_vehicle.launch.py')),
             launch_arguments={
                 'vehicle': vehicle_name,
                 'px4_config_file': vehicle_px4_config,
-                'id': vehicle_id,
+                'vehicle_id': vehicle_id,
+                'vehicle_ns': LaunchConfiguration('vehicle_ns').perform(context),
+                'pegasus_gnc_launchfile': LaunchConfiguration('pegasus_gnc_launchfile').perform(context),
                 'x': LaunchConfiguration('x').perform(context),
                 'y': LaunchConfiguration('y').perform(context),
                 'z': LaunchConfiguration('z').perform(context),

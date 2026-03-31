@@ -6,11 +6,43 @@
 | Description: Base launch file to spawn the x500 vehicle model in Gazebo, along with its corresponding PX4 SITL instance.
 """
 import os
+from launch_ros.actions import Node
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
+
+
+def launch_vehicle(context, *args, **kwargs):
+
+    vehicle_name = 'x500'
+    vehicle_px4_config = '4500_pg_x500'
+    vehicle_id = LaunchConfiguration('vehicle_id').perform(context)
+
+    # The namespace under which the sensor topics appear in gazebo
+    gazebo_namespace = f'{vehicle_name}_{vehicle_id}'
+
+    # The namespace under which the ROS2 topics will be available
+    ros2_namespace = f'{LaunchConfiguration("vehicle_ns").perform(context)}{vehicle_id}'
+
+    # Launch the vehicle using the default vehicle launch file (which does all the heavy lifting)
+    vehicle_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('pegasus_gz'), 'launch/vehicles/default_vehicle.launch.py')),
+            launch_arguments={
+                'vehicle': vehicle_name,
+                'px4_config_file': vehicle_px4_config,
+                'vehicle_id': vehicle_id,
+                'vehicle_ns': LaunchConfiguration('vehicle_ns').perform(context),
+                'pegasus_gnc_launchfile': LaunchConfiguration('pegasus_gnc_launchfile').perform(context),
+                'x': LaunchConfiguration('x').perform(context),
+                'y': LaunchConfiguration('y').perform(context),
+                'z': LaunchConfiguration('z').perform(context),
+                'R': LaunchConfiguration('R').perform(context),
+                'P': LaunchConfiguration('P').perform(context),
+                'Y': LaunchConfiguration('Y').perform(context)
+            }.items())
+
+    return [vehicle_launch]
 
 
 def generate_launch_description():
@@ -21,26 +53,13 @@ def generate_launch_description():
         DeclareLaunchArgument('vehicle_id', default_value='1', description='Drone ID in the network'),
         DeclareLaunchArgument('vehicle_ns', default_value='drone', description='Namespace to append to every topic and node name in ROS2'),
         DeclareLaunchArgument('pegasus_gnc_launchfile', default_value='simulation/x500_sim.launch.py', description='Whether to launch the Pegasus GNC stack alongside the vehicle'),
-        
         DeclareLaunchArgument('x', default_value='0.0', description='X position expressed in ENU'),
         DeclareLaunchArgument('y', default_value='0.0', description='Y position expressed in ENU'),
-        DeclareLaunchArgument('z', default_value='0.5', description='Z position expressed in ENU'),
+        DeclareLaunchArgument('z', default_value='0.3', description='Z position expressed in ENU'),
         DeclareLaunchArgument('R', default_value='0.0', description='Roll orientation expressed in ENU'),
         DeclareLaunchArgument('P', default_value='0.0', description='Pitch orientation expressed in ENU'),
         DeclareLaunchArgument('Y', default_value='0.0', description='Yaw orientation expressed in ENU'),
-        
-        # Launch the vehicle using the default vehicle launch file (which does all the heavy lifting)
-        IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('pegasus_gz'), 'launch/vehicles/default_vehicle.launch.py')),
-            launch_arguments={
-                'vehicle': 'x500',
-                'px4_config_file': '4500_pg_x500',
-                'id': LaunchConfiguration('vehicle_id'),
-                'x': LaunchConfiguration('x'),
-                'y': LaunchConfiguration('y'),
-                'z': LaunchConfiguration('z'),
-                'R': LaunchConfiguration('R'),
-                'P': LaunchConfiguration('P'),
-                'Y': LaunchConfiguration('Y')
-            }.items()
-        )
+    
+        # Launch the actual vehicle inside gazebo, along with the corresponding PX4 SITL instance
+        OpaqueFunction(function=launch_vehicle)
     ])
