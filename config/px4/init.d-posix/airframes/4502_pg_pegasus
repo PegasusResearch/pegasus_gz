@@ -47,3 +47,45 @@ param set-default SIM_GZ_EC_MAX1 1000
 param set-default SIM_GZ_EC_MAX2 1000
 param set-default SIM_GZ_EC_MAX3 1000
 param set-default SIM_GZ_EC_MAX4 1000
+
+# Set the PX4 inner-loop controller gains
+param set-default MC_ROLLRATE_D 0.00100
+param set-default MC_ROLLRATE_FF 0.0010
+param set-default MC_ROLLRATE_I 0.12500
+param set-default MC_ROLLRATE_K 1.000
+param set-default MC_ROLLRATE_MAX 220.0
+param set-default MC_ROLLRATE_P	0.270
+param set-default MC_ROLL_P	8.50
+
+param set-default MC_PITCHRATE_D 0.0010
+param set-default MC_PITCHRATE_FF 0.00100
+param set-default MC_PITCHRATE_I 0.125
+param set-default MC_PITCHRATE_K 1.000
+param set-default MC_PITCHRATE_MAX 220.0
+param set-default MC_PITCHRATE_P 0.270
+param set-default MC_PITCH_P 8.65
+
+param set-default MC_YAWRATE_D 0.00233
+param set-default MC_YAWRATE_FF 0.00000000
+param set-default MC_YAWRATE_I 0.089474536
+param set-default MC_YAWRATE_K 1.000000000
+param set-default MC_YAWRATE_MAX 1000.00000
+param set-default MC_YAWRATE_P 0.0896184
+param set-default MC_YAW_P 4.8000001907
+param set-default MC_YAW_TQ_CUTOFF 2.0000000000
+param set-default MC_YAW_WEIGHT 0.40000000596
+
+# Set the PX4 outer-loop (position and velocity) controller gains
+
+# Velocity Horizontal
+param set-default MPC_XY_VEL_D_ACC 0.20000000
+param set-default MPC_XY_VEL_I_ACC 1.00000000
+param set-default MPC_XY_VEL_P_ACC 3.0000000
+# Velocity Vertical
+param set-default MPC_Z_VEL_D_ACC 0.000000000
+param set-default MPC_Z_VEL_I_ACC 2.000000000
+param set-default MPC_Z_VEL_P_ACC 4.00000000
+
+# Position Horizontal and Vertical
+param set-default MPC_XY_P 1.40
+param set-default MPC_Z_P 1.000
