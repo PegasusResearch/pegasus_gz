@@ -14,6 +14,61 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 
 
+def create_static_transforms(vehicle_ns: str, vehicle_id: int, gazebo_namespace: str) -> list:
+    """Create static sensor transforms under Gazebo frame naming."""
+    gazebo_base_link_frame = f'{gazebo_namespace}/base_link'
+    base_link_frame = f'{vehicle_ns}{vehicle_id}/base_link'
+
+    # Artificial 
+    artificial_tf_node = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=[
+            '0.0', '0.0', '0.0', '0.0', '0.0', '0.0',
+            base_link_frame, f'{gazebo_base_link_frame}'
+        ],
+        output='screen'
+    )
+
+    # Realsense camera pose from model.sdf: x=0.15, y=0.0, z=0.0, RPY=(0,0,0)
+    realsense_tf_node = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=[
+            '0.15', '0.0', '0.0', '0.0', '0.0', '0.0',
+            base_link_frame, f'{gazebo_base_link_frame}/realsense_d435i'
+        ],
+        output='screen'
+    )
+
+    # Downward camera pose from model.sdf: x=0.10, y=0.0, z=0.0, RPY=(0,1.5707963268,0)
+    downward_tf_node = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=[
+            '0.10', '0.0', '0.0', '0.0', '1.5707963268', '0.0',
+            base_link_frame, f'{gazebo_base_link_frame}/downward_camera'
+        ],
+        output='screen'
+    )
+
+    # IMU sensor is colocated with base_link, but we access to it via mavlink/xrce interface
+    # therefore it already comes with the correct frame_id in the ROS2 message, so we also create a static transform for it in Gazebo to be able to visualize it in RViz and have the correct TF tree structure
+    # IMU data comes in FRD (Forward-Right-Down) convention, so we also rotate the IMU frame by 180 deg about X axis
+    imu_tf_node = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=[
+            '0.0', '0.0', '0.0',  # Translation
+            '1', '0', '0', '0',   # qx qy qz qw  = 180 deg about X
+            base_link_frame, f'{base_link_frame}/imu'
+        ],
+        output='screen'
+    )
+
+    return [artificial_tf_node, realsense_tf_node, imu_tf_node, downward_tf_node]
+
+
 def launch_vehicle(context, *args, **kwargs):
 
     vehicle_name = 'pegasus'
@@ -73,10 +128,14 @@ def launch_vehicle(context, *args, **kwargs):
             ],
             output='screen'
         )
+    
+    # Create static transforms for the sensors based on the Gazebo model definition
+    static_tf_nodes = create_static_transforms(LaunchConfiguration('vehicle_ns').perform(context), vehicle_id, gazebo_namespace)
 
     return [
         vehicle_launch,
-        ros2_bridge_node
+        ros2_bridge_node,
+        *static_tf_nodes
     ]
 
 
