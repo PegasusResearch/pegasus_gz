@@ -75,6 +75,7 @@ def launch_vehicle(context, *args, **kwargs):
         output='screen',
         env={
             'ROS_VERSION': '2',
+            'PX4_UXRCE_DDS_NS': LaunchConfiguration('vehicle_ns').perform(context) + str(vehicle_id) + '/px4',
             'PX4_GZ_STANDALONE': '1',
             'PX4_GZ_MODEL_NAME': vehicle_spawn_name,
             'PX4_SYS_AUTOSTART': px4_config_file.split('_')[0],
